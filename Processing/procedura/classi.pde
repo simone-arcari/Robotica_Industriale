@@ -1,6 +1,4 @@
-import java.util.ArrayList;
-
-
+import java.util.ArrayList;  // per poter utilizzare i vettori dinamici
 
 /*
   Rappressenta una tabella di Denavit-Hartenberg dinamica
@@ -13,10 +11,9 @@ class DenavitTable {
   ArrayList<Float> alpha;    // Vettore dinamico alpha[]   [rotazioni lungo X]
   ArrayList<Float> a;        // Vettore dinamico a[]       [traslazioni lungo X]
   
-  ArrayList<Integer> t;      // Vettore dinamico t[]       [indica dove si trovano le varibili q1,q2,...]
+  ArrayList<Integer> t;      // Vettore dinamico t[]       [indica su qual1 caselle della tabella di Denavit Hartenberg si trovano le varibili q1,q2,...]
   
   
-
   // Costruttore con parametri per impostare la lunghezza iniziale dei vettori [numero DoF]
   DenavitTable(int n) {
     DoF = n;
@@ -33,7 +30,7 @@ class DenavitTable {
     Aggiorna i valori q1,q2,... della tabella
   */
   void update(ArrayList<Float> q) {
-    for(int i=0; i<DoF; i++) {
+    for (int i=0; i<DoF; i++) {
       switch (t.get(i)) {
         
         case 0:
@@ -83,7 +80,7 @@ class Robot {
     float oldValue;
     float newValue;
     
-    for(int i=0; i<n; i++) {
+    for (int i=0; i<n; i++) {
       oldValue = q.get(i);
       newValue = oldValue - kp*(oldValue-qr.get(i));  //legge di controllo proporzionale
       q.set(i, newValue);    
@@ -125,7 +122,7 @@ class Robot {
     table.update(q);    // aggiorna i parametri q del robot essendo dinamici
     
     fill(robotColor);
-    for(int i=0; i<n; i++) {
+    for (int i=0; i<n; i++) {
       link(table.theta.get(i), table.d.get(i), table.alpha.get(i), table.a.get(i));
     }
   }

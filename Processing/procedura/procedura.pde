@@ -1,16 +1,14 @@
-import java.util.ArrayList;
-
-// Parametri vari
-int giunto = 1;
-int robotIndex = 0;
-float incr = 0.5;
-float kp = 0.02;
-float kd = 300;
+// Variabili generiche
+int giunto = 0;      // indica quale giunto si intende controllare da tastiera
+int robotIndex = 0;  // i robot memorizzati nel programma sono indicizzati 
+float incr = 0.5;    // incremeto applicato tramite tastiere al valore del giunto selezionato
+float kp = 0.02;     // costante moltiplicativa per la legge di controllo proporzionale
+float kd = 300;      // costate moltiplicativa per i parametri q1,q2,... nel caso in cui siano giunti prismatici
 
 // Parametri standard per il disegno
-int fillColor = #CEC962;
-int backgroundColor = #A9EDF0;
-float linkSize = 25;             // valore spessore dei link
+int fillColor = #CEC962;           // colore robot
+int backgroundColor = #A9EDF0;     // colore sfondo
+float linkSize = 25;               // valore spessore dei link
 
 // Rotazione dell'ambinete grafico
 float offsetZ = -100;  // indica la traslazione lungo l'asse Z che viene fatto all'inizio del draw()
@@ -26,18 +24,15 @@ int ambientLight = 200;  // valore luce ambientale uniforme
 float dirX = 0;          // componente X versore direzione punto luce
 float dirZ = 1;          // componente Z versore direzione punto luce
 
-// Robot correntemente caricato in memoria
-Robot robot;
+
+ArrayList<Robot> robots;
 
 
-
- 
 void setup() {
   size(1386,756,P3D);
   background(backgroundColor);
   
-  makeTables();
-  loadRobot(0);
+  robots = makeRobots(makeTables());
 }
  
  
@@ -56,7 +51,7 @@ void draw() {
   /*
     DA QUI INIZIA LA ZONA DI CODICE IN CUI POTER DISEGNARE
   */
-  robot.drawRobot();  
+  robots.get(robotIndex).drawRobot();  
 }
 
 
@@ -73,56 +68,48 @@ void mouseDragged() {
 
 
 void keyPressed() {
-  if (keyCode == '1') giunto = 1;
-  if (keyCode == '2') giunto = 2;
-  if (keyCode == '3') giunto = 3;
-  if (keyCode == '4') giunto = 4;
-  if (keyCode == '5') giunto = 5;
-  if (keyCode == '6') giunto = 6;
-  if (keyCode == '7') giunto = 7;
-  if (keyCode == '8') giunto = 8;
-  if (keyCode == '9') giunto = 9;
-  if (keyCode == '0') giunto = 0;
+  if (keyCode == '1') giunto = 0;
+  if (keyCode == '2') giunto = 1;
+  if (keyCode == '3') giunto = 2;
+  if (keyCode == '4') giunto = 3;
+  if (keyCode == '5') giunto = 4;
+  if (keyCode == '6') giunto = 5;
+  if (keyCode == '7') giunto = 6;
+  if (keyCode == '8') giunto = 7;
+  if (keyCode == '9') giunto = 8;
+  if (keyCode == '0') giunto = 9;
   
   
   if (keyCode == UP) {
     robotIndex++;
-    if(robotIndex >= table_number) robotIndex = 0;
-    
-    loadRobot(robotIndex);
+    if(robotIndex >= table_number) robotIndex = 0;    
   }
   
   if (keyCode == DOWN) {
     robotIndex--;
     if(robotIndex < 0) robotIndex = table_number-1;
-    
-    loadRobot(robotIndex);
   }
   
   
   if (keyCode == RIGHT) {
-    if (giunto == 1) robot.qr.set(0, robot.qr.get(0)+incr);
-    if (giunto == 2) robot.qr.set(1, robot.qr.get(1)+incr);
-    if (giunto == 3) robot.qr.set(2, robot.qr.get(2)+incr);
-    if (giunto == 4) robot.qr.set(3, robot.qr.get(3)+incr);
-    if (giunto == 5) robot.qr.set(4, robot.qr.get(4)+incr);
-    if (giunto == 6) robot.qr.set(5, robot.qr.get(5)+incr);
-    if (giunto == 7) robot.qr.set(6, robot.qr.get(6)+incr);
-    if (giunto == 8) robot.qr.set(7, robot.qr.get(7)+incr);
-    if (giunto == 9) robot.qr.set(8, robot.qr.get(8)+incr);
-    if (giunto == 0) robot.qr.set(9, robot.qr.get(9)+incr);
+    Robot robot = robots.get(robotIndex);
+    int n = robot.table.DoF;
+    
+    for (int i=0; i<n; i++) {
+      if (giunto == i) {
+        robot.qr.set(i, robot.qr.get(i)+incr);
+      }
+    }
   }
   
   if (keyCode == LEFT) {
-    if (giunto == 1) robot.qr.set(0, robot.qr.get(0)-incr);
-    if (giunto == 2) robot.qr.set(1, robot.qr.get(1)-incr);
-    if (giunto == 3) robot.qr.set(2, robot.qr.get(2)-incr);
-    if (giunto == 4) robot.qr.set(3, robot.qr.get(3)-incr);
-    if (giunto == 5) robot.qr.set(4, robot.qr.get(4)-incr);
-    if (giunto == 6) robot.qr.set(5, robot.qr.get(5)-incr);
-    if (giunto == 7) robot.qr.set(6, robot.qr.get(6)-incr);
-    if (giunto == 8) robot.qr.set(7, robot.qr.get(7)-incr);
-    if (giunto == 9) robot.qr.set(8, robot.qr.get(8)-incr);
-    if (giunto == 0) robot.qr.set(9, robot.qr.get(9)-incr);
+    Robot robot = robots.get(robotIndex);
+    int n = robot.table.DoF;
+    
+    for (int i=0; i<n; i++) {
+      if (giunto == i) {
+        robot.qr.set(i, robot.qr.get(i)-incr);
+      }
+    }
   }
 }

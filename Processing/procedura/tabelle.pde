@@ -16,11 +16,12 @@ Table puma = new Table();
 Table stanford = new Table();
 
 
-ArrayList<Table> tables = new ArrayList<Table>(table_number);
+//ArrayList<Robot> robo = new ArrayList<Robot>(table_number);
 
 
-void makeTables() {
+ArrayList<Table> makeTables() {
   TableRow row;
+  ArrayList<Table> tables = new ArrayList<Table>(table_number);
   
   /**** Planare 2DoF ****/
   planare2DoF.addColumn("theta");
@@ -359,57 +360,62 @@ void makeTables() {
   tables.add(stanford);
   
   
-
+  return tables;
 }
 
-void loadRobot(int index) {
-  Table table = tables.get(index);
-  int rowNumber = table.getRowCount();
-  
+Robot makeRobot(Table table) {
+  int rowNumber = table.getRowCount();  
   DenavitTable denavitTable = new DenavitTable(rowNumber);
-  robot = new Robot(denavitTable, fillColor);
+  Robot robot = new Robot(denavitTable, fillColor);
   
-  for(int i=0; i<rowNumber; i++) {
+  for (int i=0; i<rowNumber; i++) {
     float v1 = table.getFloat(i, "theta");
     float v2 = table.getFloat(i, "d");
     float v3 = table.getFloat(i, "alpha");
     float v4 = table.getFloat(i, "a");
     
-    println(v1);
-    println(v2);
-    println(v3);
-    println(v4);
     
-
-    if(Float.isNaN(v1)) {
+    if (Float.isNaN(v1)) {
       denavitTable.theta.add(i, 0.0);
       denavitTable.t.add(i, 0);
-    }else{
+    } else {
       denavitTable.theta.add(i, v1);
     }
     
-    if(Float.isNaN(v2)) {
+    if (Float.isNaN(v2)) {
       denavitTable.d.add(i, 0.0);
       denavitTable.t.add(i, 1);
-    }else{
+    } else {
       denavitTable.d.add(i, v2);
     }
     
-    if(Float.isNaN(v3)) {
+    if (Float.isNaN(v3)) {
       denavitTable.alpha.add(i, 0.0);
       denavitTable.t.add(i, 2);
-    }else{
+    } else {
       denavitTable.alpha.add(i, v3);
     }
     
-    if(Float.isNaN(v4)) {
+    if (Float.isNaN(v4)) {
       denavitTable.a.add(i, 0.0);
       denavitTable.t.add(i, 3);
-    }else{
+    } else {
       denavitTable.a.add(i, v4);
     }
     
     robot.q.add(i, 0.0);
     robot.qr.add(i, 0.0);
   }
+  
+  return robot;
+}
+
+ArrayList<Robot> makeRobots(ArrayList<Table> tables) {
+  ArrayList<Robot> robo = new ArrayList<Robot>(table_number);
+  
+  for(int i=0; i<table_number; i++) {
+    robo.add(makeRobot(tables.get(i)));
+  }
+  
+  return robo;
 }
