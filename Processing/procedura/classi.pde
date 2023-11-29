@@ -26,9 +26,7 @@ class DenavitTable {
     t = new ArrayList<Integer>(DoF);
   }
   
-  /*
-    Aggiorna i valori q1,q2,... della tabella
-  */
+  // Aggiorna i valori q1,q2,... della tabella
   void update(ArrayList<Float> q) {
     for (int i=0; i<DoF; i++) {
       switch (t.get(i)) {
@@ -72,9 +70,7 @@ class Robot {
     qr = new ArrayList<Float>(table.DoF);
   }
   
-  /*
-    Movimenta il robot secondo unalegge di controllo proporzionale
-  */
+  // Movimenta il robot secondo unalegge di controllo proporzionale
   void move() {
     int n = table.DoF;
     float oldValue;
@@ -112,9 +108,7 @@ class Robot {
   }
   
   
-  /*
-    Disegna il robot sulla base della tabella di Denavit-Hartenberg fornita
-  */
+  // Disegna il robot sulla base della tabella di Denavit-Hartenberg fornita
   void drawRobot() {
     int n = table.DoF;
     
@@ -126,4 +120,47 @@ class Robot {
       link(table.theta.get(i), table.d.get(i), table.alpha.get(i), table.a.get(i));
     }
   }
+}
+
+
+
+/*
+  Rappressenta uno oscilloscopio
+*/
+class Oscilloscope {
+  float oWidth;
+  float oHeight;
+  float x0;
+  float y0;
+  int lineNumber;
+  
+  
+  
+  // Costruttore
+  Oscilloscope(float w, float h, float x, float y, int n) {
+    oWidth = w;
+    oHeight = h;
+    x0 = x;
+    y0 = y;
+    lineNumber = n;
+  }
+  
+  
+  void drawOscilloscope() {
+    float offset = 3;
+    float stepX = oWidth/(lineNumber+1);
+    float stepY = oHeight/(lineNumber+1);
+    
+    fill(0);
+    rect(x0, y0, oWidth, oHeight);
+    fill(255);
+    rect(x0+offset, y0+offset, oWidth-2*offset, oHeight-2*offset);
+    
+    stroke(0);   // Imposta il colore della linea a nero
+    for (int i=1; i<=lineNumber; i++) {
+      line(x0+stepX*i, y0, x0+stepX*i, y0+oHeight);
+      line(x0, y0+stepY*i, x0+oWidth, y0+stepY*i);
+    }
+  }
+  
 }

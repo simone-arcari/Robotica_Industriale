@@ -12,26 +12,41 @@ float linkSize = 25;               // valore spessore dei link
 
 // Rotazione dell'ambinete grafico
 float offsetZ = -100;  // indica la traslazione lungo l'asse Z che viene fatto all'inizio del draw()
-float aX = PI/2;       // variabile per la rotazione dell'ambiente grafico lungo l'asse X
-float aY = PI/2;       // variabile per la rotazione dell'ambiente grafico lungo l'asse Y
-float aXp = 0;         // p = partenza
-float aYp= 0;          // p = partenza
+float aX = 0;          // variabile per la rotazione dell'ambiente grafico lungo l'asse X
+float aY = 0;          // ------------------------------------------------------------- Y
+float aXp = 0;         // p = partenza x
+float aYp= 0;          // ------------ y
 float Ka = 300;        // costate di proporzionalità inversa [usata in mousePressed() e mouseDragged()]
 
 // Luci ambientali
-int lightValue = 128;    // valore punto luce direzionabile
-int ambientLight = 200;  // valore luce ambientale uniforme
-float dirX = 0;          // componente X versore direzione punto luce
-float dirZ = 1;          // componente Z versore direzione punto luce
+int lightValue = 128;      // valore punto luce direzionabile
+int ambientLight = 200;    // valore luce ambientale uniforme
+float dirX = sin(5*PI/6);  // componente X versore direzione punto luce
+float dirZ = cos(5*PI/6);  // ---------- Z ----------------------------
+
+// Oscilloscopio
+float margin = 20;        // tra il disegno dell'oscilloscopio ed i bordi della finestra
+float w;                  // larghezza oscilloscopio
+float h;                  // altezza oscilloscopio
+float xp;                 // posizione x dell'angolo in alto a sinistra dell'oscilloscopio
+float yp;                 // --------- y -------------------------------------------------
+int lineNumber = 30;      // numero di linee verticali disegante sull'oscilloscopio (uguali al numero di linee orizzontali)
 
 
 ArrayList<Robot> robots;
+Oscilloscope oscilloscope;
 
 
 void setup() {
   size(1386,756,P3D);
   background(backgroundColor);
   
+  w = width/2;
+  h = height-2*margin;
+  xp = width-w-margin;
+  yp = (height-h)/2;
+  
+  oscilloscope = new Oscilloscope(w,h, xp,yp, lineNumber);
   robots = makeRobots(makeTables());
 }
  
@@ -39,7 +54,9 @@ void setup() {
 void draw() {
   background(backgroundColor);
   
-  translate(width/4, height/2, -100);
+  oscilloscope.drawOscilloscope();
+  
+  translate(width/6, height/2, -200);
   rotateX(aX);   // rotazione dell'ambiente grafico lungo l'asse X [tramite mouse]
   rotateY(-aY);  // il meno server per ovviare al fatto che processing utilizza un sistema di riferimento sinistro
  
@@ -48,10 +65,11 @@ void draw() {
   
   noStroke();  // di base non vogliamo visualizzare le linee delle figure
   
-  /*
-    DA QUI INIZIA LA ZONA DI CODICE IN CUI POTER DISEGNARE
-  */
-  robots.get(robotIndex).drawRobot();  
+
+  
+  robots.get(robotIndex).drawRobot();
+  
+  
 }
 
 
