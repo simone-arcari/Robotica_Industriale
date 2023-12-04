@@ -1,7 +1,8 @@
 import processing.data.*;
 
 
-int table_number = 11;
+int table_number = 11;  // numero di robot mappati nel programma correntemente (per ogni robot aggiunto aggiornare valore qui)
+
 
 Table planare2DoF = new Table();
 Table planare3DoF = new Table();
@@ -403,8 +404,13 @@ Robot makeRobot(Table table) {
       denavitTable.a.add(i, v4);
     }
     
+    // Imposto i valori iniziali
     robot.q.add(i, 0.0);
     robot.qr.add(i, 0.0);
+    
+    // Memorizza i valori correnti di q e qr in modo che l'oscilloscopio abbia almeno un dato iniziale per plottare senza errori
+    robot.qData.signals.get(i).add(0.0);
+    robot.qrData.signals.get(i).add(0.0);
   }
   
   return robot;

@@ -1,9 +1,10 @@
 // Variabili generiche
-int giunto = 0;      // indica quale giunto si intende controllare da tastiera
-int robotIndex = 0;  // i robot memorizzati nel programma sono indicizzati 
-float incr = 0.5;    // incremeto applicato tramite tastiere al valore del giunto selezionato
-float kp = 0.02;     // costante moltiplicativa per la legge di controllo proporzionale
-float kd = 300;      // costate moltiplicativa per i parametri q1,q2,... nel caso in cui siano giunti prismatici
+int giunto = 0;          // indica quale giunto si intende controllare da tastiera
+int robotIndex = 0;      // i robot memorizzati nel programma sono indicizzati 
+float incr = 0.5;        // incremeto applicato tramite tastiere al valore del giunto selezionato
+float kp = 0.02;         // costante moltiplicativa per la legge di controllo proporzionale
+float kd = 300;          // costate moltiplicativa per i parametri q1,q2,... nel caso in cui siano giunti prismatici
+int sampleNumber = 300;  // ogni robot tiene traccia degli ultimi sampleNumber valori di q e qr
 
 // Parametri standard per il disegno
 int fillColor = #CEC962;           // colore robot
@@ -46,7 +47,7 @@ void setup() {
   xp = width-w-margin;
   yp = (height-h)/2;
   
-  oscilloscope = new Oscilloscope(w,h, xp,yp, lineNumber);
+  oscilloscope = new Oscilloscope(w,h, xp,yp, 4, lineNumber);
   robots = makeRobots(makeTables());
 }
  
@@ -55,6 +56,10 @@ void draw() {
   background(backgroundColor);
   
   oscilloscope.drawOscilloscope();
+  stroke(255,0,0);
+  oscilloscope.drawSignals(robots.get(robotIndex).qData);
+  stroke(0,0,255);
+  oscilloscope.drawSignals(robots.get(robotIndex).qrData);
   
   translate(width/6, height/2, -200);
   rotateX(aX);   // rotazione dell'ambiente grafico lungo l'asse X [tramite mouse]
@@ -128,6 +133,15 @@ void keyPressed() {
       if (giunto == i) {
         robot.qr.set(i, robot.qr.get(i)-incr);
       }
+    }
+  }
+  
+  if (keyCode == ENTER) {
+    Robot robot = robots.get(robotIndex);
+    int n = robot.table.DoF;
+    
+    for (int i=0; i<n; i++) {
+      robot.qr.set(i, 0.0);
     }
   }
 }
