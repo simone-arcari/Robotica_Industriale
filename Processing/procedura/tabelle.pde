@@ -2,7 +2,7 @@ import processing.data.*;
 
 
 int table_number = 11;  // numero di robot mappati nel programma correntemente (per ogni robot aggiunto aggiornare valore qui)
-
+String[] names = {"planare2DoF", "planare3DoF", "cartesiano", "cilindrico", "scara", "sfericoTipo1", "sfericoStanford", "antropomorfo", "polsoSferico", "puma", "stanford"};
 
 Table planare2DoF = new Table();
 Table planare3DoF = new Table();

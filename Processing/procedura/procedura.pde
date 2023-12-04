@@ -55,26 +55,30 @@ void setup() {
 void draw() {
   background(backgroundColor);
   
+  // Grafici - Oscilloscopio
   oscilloscope.drawOscilloscope();
   stroke(255,0,0);
   oscilloscope.drawSignals(robots.get(robotIndex).qData);
   stroke(0,0,255);
   oscilloscope.drawSignals(robots.get(robotIndex).qrData);
   
+  // Nomi dei robot
+  fill(255,0,0);
+  textSize(50);
+  text(names[robotIndex], 10, height-20);
+  
+  // Setup spazio 3D
   translate(width/6, height/2, -200);
   rotateX(aX);   // rotazione dell'ambiente grafico lungo l'asse X [tramite mouse]
   rotateY(-aY);  // il meno server per ovviare al fatto che processing utilizza un sistema di riferimento sinistro
  
+  // Setup luci - Ombre
   directionalLight(lightValue, lightValue, lightValue, dirX, 0, dirZ);   // punto luce direzionabile
   ambientLight(ambientLight, ambientLight, ambientLight);                // luce ambientale uniforme
   
+  // Disegno robot
   noStroke();  // di base non vogliamo visualizzare le linee delle figure
-  
-
-  
   robots.get(robotIndex).drawRobot();
-  
-  
 }
 
 

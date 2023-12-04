@@ -115,6 +115,7 @@ class Robot {
     qrData = new Signal(table.DoF, sampleNumber);   // ------------------------------------------------------------------------------------------ qr
   }
   
+  
   // Movimenta il robot secondo una legge di controllo proporzionale
   void move() {
     int n = table.DoF;
@@ -239,7 +240,6 @@ class Oscilloscope {
       
       maxValue = r.getAbsolutMax(i);
       if (maxValue < 2*PI)  maxValue = 2*PI;
-      println(maxValue);
       
       firstPointX = originX;
       firstPointY = originY + (temp.get(0)/maxValue)*maxRange;
