@@ -4,6 +4,7 @@ import processing.data.*;
 int table_number = 11;  // numero di robot mappati nel programma correntemente (per ogni robot aggiunto aggiornare valore qui)
 String[] names = {"planare2DoF", "planare3DoF", "cartesiano", "cilindrico", "scara", "sfericoTipo1", "sfericoStanford", "antropomorfo", "polsoSferico", "puma", "stanford"};
 
+
 Table planare2DoF = new Table();
 Table planare3DoF = new Table();
 Table cartesiano = new Table();
@@ -17,7 +18,6 @@ Table puma = new Table();
 Table stanford = new Table();
 
 
-//ArrayList<Robot> robo = new ArrayList<Robot>(table_number);
 
 
 ArrayList<Table> makeTables() {
@@ -364,6 +364,8 @@ ArrayList<Table> makeTables() {
   return tables;
 }
 
+
+
 Robot makeRobot(Table table) {
   int rowNumber = table.getRowCount();  
   DenavitTable denavitTable = new DenavitTable(rowNumber);
@@ -415,6 +417,7 @@ Robot makeRobot(Table table) {
   
   return robot;
 }
+
 
 ArrayList<Robot> makeRobots(ArrayList<Table> tables) {
   ArrayList<Robot> robo = new ArrayList<Robot>(table_number);

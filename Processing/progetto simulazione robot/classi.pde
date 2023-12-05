@@ -1,12 +1,14 @@
 import java.util.ArrayList;  // per poter utilizzare i vettori dinamici
 
-/* 
-  Rappresenta un segnale a n componenti nel tempo
-*/
+
+
+
+// Rappresenta un segnale a n componenti nel tempo
 class Signal {
   int nSignals;
   ArrayList<ArrayList<Float>> signals;  // Vettore di vettori di float, ogni vettore e un insieme di campioni
 
+  // Costruttore
   Signal(int nSignals, int nSamples) {
     this.nSignals = nSignals;
     signals = new ArrayList<ArrayList<Float>>(nSignals);
@@ -17,33 +19,34 @@ class Signal {
     }
   }
   
+  // Metodi:
   float getAbsolutMax(int signalIndex) {
+    float max;
+    float current;
+    
     // Controlla se l'ArrayList è vuoto
-    if (signals.get(signalIndex).isEmpty()) {
-      
+    if (signals.get(signalIndex).isEmpty()) {    
       return 0; 
     }
   
-    // Inizializza il valore massimo al primo elemento dell'ArrayList
-    float max = abs(signals.get(signalIndex).get(0));
+    max = abs(signals.get(signalIndex).get(0));  // Inizializza il valore massimo al primo elemento dell'ArrayList
   
     // Scorre gli elementi e aggiorna il valore massimo se necessario
     for (int i=1; i < signals.get(signalIndex).size(); i++) {
-      float current = abs(signals.get(signalIndex).get(i));
+      current = abs(signals.get(signalIndex).get(i));
       if (current > max) {
         max = current;
       }
     }
 
-    // Restituisci il valore massimo trovato
-    return max;
+    return max;  // Restituisci il valore massimo trovato
   }
 }
 
 
-/*
-  Rappressenta una tabella di Denavit-Hartenberg dinamica
-*/
+
+
+// Rappressenta una tabella di Denavit-Hartenberg dinamica
 class DenavitTable {
   int DoF;
   
@@ -93,9 +96,9 @@ class DenavitTable {
 }
 
 
-/*
-  Rappressenta un robot qualsiasi
-*/
+
+
+// Rappressenta un robot qualsiasi
 class Robot {
   int robotColor;
   DenavitTable table;
@@ -115,6 +118,7 @@ class Robot {
     qrData = new Signal(table.DoF, sampleNumber);   // ------------------------------------------------------------------------------------------ qr
   }
   
+  // Metodi:
   
   // Movimenta il robot secondo una legge di controllo proporzionale
   void move() {
@@ -179,9 +183,8 @@ class Robot {
 
 
 
-/*
-  Rappressenta uno oscilloscopio
-*/
+
+// Rappressenta uno oscilloscopio
 class Oscilloscope {
   float oWidth;
   float oHeight;
@@ -189,7 +192,6 @@ class Oscilloscope {
   float y0;
   float margin;
   int lineNumber;
-  
   
   
   // Costruttore
@@ -202,6 +204,7 @@ class Oscilloscope {
     lineNumber = n;
   }
   
+  // Metodi:
   
   void drawOscilloscope() {
     float stepX = oWidth/(lineNumber+1);
