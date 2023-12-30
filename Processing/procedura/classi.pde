@@ -142,6 +142,9 @@ class Robot {
     a:       traslazione asse X
   */
   void link(float theta, float d, float alpha, float a) {
+    noStroke();
+    fill(robotColor);
+    
     rotateZ(theta);
     sphere(linkSize);              // disegna una sfera per simboleggiare un giunto del link
     
@@ -157,6 +160,92 @@ class Robot {
     translate(-a/2, 0, 0);
   }
   
+  /* 
+    Dissegna un cilindro/cono
+      
+      sides:  numero facce triangolare che compongono la superficie
+      r1:     raggio base inferiore
+      r2:     raggio base superiore
+      h:      altezza cono
+  */
+  void drawCylinder(int sides, float r1, float r2, float h)
+  {
+    float angle = 360 / sides;
+    float halfHeight = h / 2;
+    
+    // top
+    beginShape();
+    for (int i = 0; i < sides; i++) {
+      float x = cos( radians( i * angle ) ) * r1;
+      float y = sin( radians( i * angle ) ) * r1;
+      vertex( x, y, -halfHeight);
+    }
+    endShape(CLOSE);
+    
+    // bottom
+    beginShape();
+    for (int i = 0; i < sides; i++) {
+      float x = cos( radians( i * angle ) ) * r2;
+      float y = sin( radians( i * angle ) ) * r2;
+      vertex( x, y, halfHeight);
+    }
+    endShape(CLOSE);
+    
+    // draw body
+    noStroke();
+    beginShape(TRIANGLE_STRIP);
+    for (int i = 0; i < sides + 1; i++) {
+      float x1 = cos( radians( i * angle ) ) * r1;
+      float y1 = sin( radians( i * angle ) ) * r1;
+      float x2 = cos( radians( i * angle ) ) * r2;
+      float y2 = sin( radians( i * angle ) ) * r2;
+      vertex( x1, y1, -halfHeight);
+      vertex( x2, y2, halfHeight);
+    }
+    endShape(CLOSE);
+  }
+  
+  /*
+    Dissegna i tre assi x y z di riferimento per i link
+    
+    lineLenght:  lunghezza degli assi diseganti
+    sides:       numero facce triangolare che compongono la superficie dei coni (freccia asse)
+    r:           raggio base dei coni
+    h:           altezza coni
+  */
+  void drawAxis(float lineLenght, int sides, float r, float h) {
+    
+    strokeWeight(2); 
+    stroke(0, 255, 0);
+    fill(0, 255, 0);
+    
+    pushMatrix();
+    line(0, 0, 0, lineLenght, 0, 0); 
+    translate(lineLenght, 0, 0);
+    rotateY(PI/2);
+    drawCylinder(sides, r, 0, h);
+    popMatrix();
+    
+    stroke(255, 0, 0);
+    fill(255, 0, 0);
+   
+    pushMatrix();
+    line(0, 0, 0, 0, lineLenght, 0); // x = red
+    translate(0, lineLenght, 0);
+    rotateX(-PI/2);
+    drawCylinder(sides, r, 0, h);
+    popMatrix();
+    
+    stroke(0, 0, 255);
+    fill(0, 0, 255);
+    
+    pushMatrix();
+    line(0, 0, 0, 0, 0, lineLenght); // z = blue
+    translate(0, 0, lineLenght);
+    drawCylinder(sides, r, 0, h);
+    popMatrix();
+  }
+  
   
   // Disegna il robot sulla base della tabella di Denavit-Hartenberg fornita
   void drawRobot() {
@@ -167,6 +256,7 @@ class Robot {
     
     fill(robotColor);
     for (int i=0; i<n; i++) {
+      drawAxis(100,10,5,15);
       link(table.theta.get(i), table.d.get(i), table.alpha.get(i), table.a.get(i));
       
       // Memorizza i valori correnti di q e qr
@@ -210,12 +300,16 @@ class Oscilloscope {
     float stepX = oWidth/(lineNumber+1);
     float stepY = oHeight/(lineNumber+1);
     
+    noStroke();
+    
+    
     fill(0);
     rect(x0, y0, oWidth, oHeight);
     fill(255);
     rect(x0+margin, y0+margin, oWidth-2*margin, oHeight-2*margin);
     
-    stroke(225);   // Imposta il colore della linea a nero
+    strokeWeight(1);
+    stroke(225);   // Imposta il colore della linea grigio chiaro
     for (int i=1; i<=lineNumber; i++) {
       line(x0+stepX*i, y0+margin, x0+stepX*i, y0+oHeight-margin);
       line(x0+margin, y0+stepY*i, x0+oWidth-margin, y0+stepY*i);
