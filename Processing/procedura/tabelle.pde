@@ -296,7 +296,7 @@ ArrayList<Table> makeTables() {
   
   row = puma.addRow();
   row.setFloat("theta", Float.NaN);
-  row.setFloat("d", 50);
+  row.setFloat("d", 150);
   row.setFloat("alpha", -PI/2);
   row.setFloat("a", 0);
   
@@ -308,7 +308,7 @@ ArrayList<Table> makeTables() {
   
   row = puma.addRow();
   row.setFloat("theta", Float.NaN);
-  row.setFloat("d", 50);
+  row.setFloat("d", 100);
   row.setFloat("alpha", 0);
   row.setFloat("a", 0);
   
@@ -354,7 +354,7 @@ ArrayList<Table> makeTables() {
   
   row = stanford.addRow();
   row.setFloat("theta", Float.NaN);
-  row.setFloat("d", 50);
+  row.setFloat("d", 150);
   row.setFloat("alpha", 0);
   row.setFloat("a", 0);
   

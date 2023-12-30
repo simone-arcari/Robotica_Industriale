@@ -133,33 +133,6 @@ class Robot {
     }
   }
   
-  /*
-    Dissegna un link stilizzato di un robot rispettando i parametri geometrici forniti
-    
-    theta:   angolo rotazione asse Z
-    d:       traslazione lungo asse Z
-    alpha:   angolo rotazione asse X
-    a:       traslazione asse X
-  */
-  void link(float theta, float d, float alpha, float a) {
-    noStroke();
-    fill(robotColor);
-    
-    rotateZ(theta);
-    sphere(linkSize);              // disegna una sfera per simboleggiare un giunto del link
-    
-    translate(0, 0, -d/2);         // ci spostiamo di metà perchè i box hanno l'origine al loro centro interno
-    box(linkSize, linkSize, d);
-    
-    translate(0, 0, -d/2);         // dal centro del primo box finiamo di traslare fino alla sua estremità
-    rotateX(alpha);
-    sphere(linkSize);
-    
-    translate(-a/2, 0, 0);
-    box(a, linkSize, linkSize);
-    translate(-a/2, 0, 0);
-  }
-  
   /* 
     Dissegna un cilindro/cono
       
@@ -216,9 +189,10 @@ class Robot {
   void drawAxis(float lineLenght, int sides, float r, float h) {
     
     strokeWeight(2); 
-    stroke(0, 255, 0);
-    fill(0, 255, 0);
     
+    /* asse X rosso */
+    stroke(255, 0, 0);
+    fill(255, 0, 0);
     pushMatrix();
     line(0, 0, 0, lineLenght, 0, 0); 
     translate(lineLenght, 0, 0);
@@ -226,19 +200,19 @@ class Robot {
     drawCylinder(sides, r, 0, h);
     popMatrix();
     
-    stroke(255, 0, 0);
-    fill(255, 0, 0);
-   
+    /* asse Y verde */
+    stroke(0, 255, 0);
+    fill(0, 255, 0);
     pushMatrix();
-    line(0, 0, 0, 0, lineLenght, 0); // x = red
-    translate(0, lineLenght, 0);
-    rotateX(-PI/2);
+    line(0, 0, 0, 0, -lineLenght, 0);     // il meno è dovuto al fatto che processing ha un s.r sinistro ma noi usiamo un s.r. destro
+    translate(0, -lineLenght, 0);         // ---------------------------------------------------------------------------------------- 
+    rotateX(PI/2);
     drawCylinder(sides, r, 0, h);
     popMatrix();
     
+    /* asse Z blu */
     stroke(0, 0, 255);
     fill(0, 0, 255);
-    
     pushMatrix();
     line(0, 0, 0, 0, 0, lineLenght); // z = blue
     translate(0, 0, lineLenght);
@@ -246,6 +220,34 @@ class Robot {
     popMatrix();
   }
   
+  /*
+    Dissegna un link stilizzato di un robot rispettando i parametri geometrici forniti
+    
+    theta:   angolo rotazione asse Z
+    d:       traslazione lungo asse Z
+    alpha:   angolo rotazione asse X
+    a:       traslazione asse X
+  */
+  void link(float theta, float d, float alpha, float a) {
+    noStroke();
+    fill(robotColor);
+    
+    rotateZ(-theta);              // il meno è dovuto al fatto che processing ha un s.r sinistro ma noi usiamo un s.r. destro 
+    sphere(linkSize);             // disegna una sfera per simboleggiare un giunto del link
+    
+    translate(0, 0, d/2);         // ci spostiamo di metà perchè i box hanno l'origine al loro centro interno
+    box(linkSize, linkSize, d);
+    
+    translate(0, 0, d/2);         // dal centro del primo box finiamo di traslare fino alla sua estremità
+    rotateX(-alpha);              // il meno è dovuto al fatto che processing ha un s.r sinistro ma noi usiamo un s.r. destro
+    sphere(linkSize);
+    
+    translate(a/2, 0, 0);
+    box(a, linkSize, linkSize);
+    translate(a/2, 0, 0);
+    
+    drawAxis(100,10,5,15);
+  }
   
   // Disegna il robot sulla base della tabella di Denavit-Hartenberg fornita
   void drawRobot() {
@@ -255,8 +257,9 @@ class Robot {
     table.update(q);    // aggiorna i parametri q del robot essendo dinamici
     
     fill(robotColor);
+    drawAxis(100,10,5,15);    // assi di riferimento 0
+    
     for (int i=0; i<n; i++) {
-      drawAxis(100,10,5,15);
       link(table.theta.get(i), table.d.get(i), table.alpha.get(i), table.a.get(i));
       
       // Memorizza i valori correnti di q e qr
